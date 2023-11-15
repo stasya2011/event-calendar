@@ -14,18 +14,18 @@ export enum RouteNames {
   EVENT = "/",
 }
 
-export const publicRout: IRoute[] = [
+export const publicRoutes: IRoute[] = [
   {
     path: RouteNames.LOGIN,
     element: Login,
   },
   {
     path: RouteNames.ERROR,
-    element: Login,
+    element: ErrorPage,
   },
 ];
 
-export const privatRout: IRoute[] = [
+export const privateRoutes: IRoute[] = [
   {
     path: RouteNames.EVENT,
     element: Events,

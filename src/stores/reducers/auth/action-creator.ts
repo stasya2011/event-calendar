@@ -25,44 +25,43 @@ export const ActionCreators = {
     payload: isLoading,
   }),
 
-  setAuth: (isAuth: boolean): IAction_SET_AUTH => ({
+  setIsAuth: (isAuth: boolean): IAction_SET_AUTH => ({
     type: AuthAction.SET_AUTH,
     payload: isAuth,
   }),
 
   login:
-    (username: string, userpassword: string) =>
-    async (dispath: AppDispatch) => {
+    (username: string, password: string) => async (dispatch: AppDispatch) => {
       try {
-        dispath(ActionCreators.setIsLoading(true));
-        const loginUsers = await getUsers();
-        const index = loginUsers.data.findIndex(
-          (user: IUser) =>
-            user.userpassword === userpassword && username === user.username
-        );
-
-        if (index > -1) {
-          dispath(ActionCreators.setAuth(true));
-          dispath(ActionCreators.setUser(loginUsers.data[index]));
-        } else {
-          dispath(
-            ActionCreators.setError("Entered incorrect password or username")
+        dispatch(ActionCreators.setIsLoading(true));
+        setTimeout(async () => {
+          const response: any = await getUsers();
+          const mockUser = response.data.users.find(
+            (user: IUser) => user.username === username
           );
-        }
-        return dispath(ActionCreators.setIsLoading(true));
+          if (mockUser) {
+            localStorage.setItem("auth", "true");
+            localStorage.setItem("username", mockUser.username);
+            dispatch(ActionCreators.setUser(mockUser));
+            dispatch(ActionCreators.setIsAuth(true));
+          } else {
+            dispatch(ActionCreators.setError("Invalid login or password."));
+          }
+          dispatch(ActionCreators.setIsLoading(false));
+        }, 2000);
       } catch (e) {
-        return dispath(ActionCreators.setError("Error message"));
+        dispatch(ActionCreators.setError("Error message"));
       }
     },
 
-  logout: () => async (dispath: AppDispatch) => {
+  logout: () => async (dispatch: AppDispatch) => {
     try {
-      dispath(ActionCreators.setIsLoading(true));
-      dispath(ActionCreators.setAuth(false));
-      dispath(ActionCreators.setUser({ username: "", userpassword: "" }));
-      return dispath(ActionCreators.setIsLoading(false));
+      dispatch(ActionCreators.setIsLoading(true));
+      dispatch(ActionCreators.setIsAuth(false));
+      dispatch(ActionCreators.setUser({ username: "", userpassword: "" }));
+      return dispatch(ActionCreators.setIsLoading(false));
     } catch (e) {
-      return dispath(ActionCreators.setError("Error message"));
+      return dispatch(ActionCreators.setError("Error message"));
     }
   },
 };

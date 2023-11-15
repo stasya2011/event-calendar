@@ -15,7 +15,7 @@ type FieldType = {
 };
 
 const FormComponent = () => {
-  const { isAuth } = useTypeSelector((state) => state.authReduser);
+  const { isError, isAuth } = useTypeSelector((state) => state.authReduser);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useActions();
@@ -26,7 +26,8 @@ const FormComponent = () => {
   const onChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
-  const onSubmit = async () => {
+  const onSubmit = () => {
+    console.log("navigate to colendar", isAuth);
     login(username, password);
 
     if (isAuth) {
@@ -42,9 +43,8 @@ const FormComponent = () => {
       style={{ maxWidth: 600 }}
       initialValues={{ remember: true }}
       onFinish={onSubmit}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
     >
+      {isError && <div style={{ color: "red" }}>{isError}</div>}
       <Form.Item<FieldType>
         label="Username"
         name="username"

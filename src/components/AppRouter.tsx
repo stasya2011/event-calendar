@@ -1,20 +1,36 @@
-import { Route, Routes } from "react-router-dom";
-import { publicRout, privatRout } from "../router";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { publicRoutes, privateRoutes } from "../router";
 import { useTypeSelector } from "../hooks";
+import { useEffect } from "react";
 
 const AppRouter = () => {
   const { isAuth } = useTypeSelector((state) => state.authReduser);
+  const navigate = useNavigate();
 
-  return !isAuth ? (
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+    }
+  }, [isAuth]);
+
+  return isAuth ? (
     <Routes>
-      {privatRout.map((route) => (
-        <Route key="route" path={route.path} element={<route.element />} />
+      {privateRoutes.map((route, i) => (
+        <Route
+          key={`${route}-${i}`}
+          path={route.path}
+          element={<route.element />}
+        />
       ))}
     </Routes>
   ) : (
     <Routes>
-      {publicRout.map((route) => (
-        <Route key="route" path={route.path} element={<route.element />} />
+      {publicRoutes.map((route, i) => (
+        <Route
+          key={`${route}-${i}`}
+          path={route.path}
+          element={<route.element />}
+        />
       ))}
     </Routes>
   );

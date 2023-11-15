@@ -8,10 +8,9 @@ import ErrorPage from "../Error/Error";
 
 const Login: React.FC = () => {
   const { isLoading, isError } = useTypeSelector((state) => state.authReduser);
-  const isLoadingComponent = isLoading && !isError && <Spinner />;
-  const isErrorComponent = !isLoading && isError && (
-    <ErrorPage message={isError} />
-  );
+  const isLoadingComponent = isLoading && !isError ? <Spinner /> : null;
+  const isErrorComponent =
+    !isLoading && isError ? <ErrorPage message={isError} /> : null;
   const content = !isError && !isLoading && <FormComponent />;
   return (
     <Layout>
