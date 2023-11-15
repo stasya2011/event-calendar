@@ -6,12 +6,12 @@ import { useActions, useTypeSelector } from "../../hooks";
 
 const Events: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { fetchGuests } = useActions();
-  const { users } = useTypeSelector((state) => state.event);
-
+  const { fetchGuests, createEvent, fetchEvents } = useActions();
+  const { users, events } = useTypeSelector((state) => state.event);
+  const { user } = useTypeSelector((state) => state.authReduser);
   useEffect(() => {
     fetchGuests();
-    console.log("++++ ", users);
+    fetchEvents(user.username);
   }, []);
 
   const onOk = () => {
@@ -20,7 +20,7 @@ const Events: FC = () => {
 
   return (
     <Layout>
-      <CalendarComponent events={[]} />
+      <CalendarComponent events={events} />
       <Row justify={"center"}>
         <Button type="primary" onClick={() => setIsModalOpen(true)}>
           Add Event
@@ -32,7 +32,13 @@ const Events: FC = () => {
           title={"Add event: "}
           footer={null}
         >
-          <EventForm users={users} />
+          <EventForm
+            users={users}
+            submitForm={(event) => {
+              createEvent(event);
+              onOk();
+            }}
+          />
         </Modal>
       </Row>
     </Layout>

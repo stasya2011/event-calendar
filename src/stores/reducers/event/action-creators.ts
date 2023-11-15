@@ -17,10 +17,36 @@ export const EventActionCreators = {
   fetchGuests: () => async (dispath: AppDispatch) => {
     try {
       const guests = await getUsers();
-      console.log(guests);
+
       dispath(EventActionCreators.setGuests(guests.data));
     } catch (error) {
       console.error(error);
+    }
+  },
+
+  fetchEvents: (authorName: string) => async (dispath: AppDispatch) => {
+    try {
+      const events = localStorage.getItem("events") || "[]";
+      const json = JSON.parse(events) as IEvent[];
+      const currentUserEvent = json.filter(
+        (ev) => ev.author === authorName || ev.guest === authorName
+      );
+
+      dispath(EventActionCreators.setEvents(currentUserEvent));
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  createEvent: (event: IEvent) => async (dispath: AppDispatch) => {
+    try {
+      const events = localStorage.getItem("events") || "[]";
+      const json = JSON.parse(events) as IEvent[];
+      json.push(event);
+      dispath(EventActionCreators.setEvents(json));
+      localStorage.setItem("events", JSON.stringify(json));
+    } catch (err) {
+      console.error(err);
     }
   },
 };

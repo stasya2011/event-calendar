@@ -15,35 +15,23 @@ type FieldType = {
 };
 
 const FormComponent = () => {
-  const { isAuth, isError } = useTypeSelector((state) => state.authReduser);
+  const { isAuth } = useTypeSelector((state) => state.authReduser);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useActions();
   const navigate = useNavigate();
-
   const onChangeUserName = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
-
   const onChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
-
   const onSubmit = async () => {
-    //! before:
-    // const myActionCreator = ActionCreators.login(username, password);
-    // const myAction: IAction | undefined = await myActionCreator(dispatch);
-    // if (myAction) {
-    //   dispatch(myAction);
-    // } else {
-    //   return;
-    // }
-    //! After:
     login(username, password);
 
-    // if (isAuth) {
-    //   navigate("/");
-    // }
+    if (isAuth) {
+      navigate("/");
+    }
   };
 
   return (

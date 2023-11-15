@@ -6,6 +6,6 @@ export interface IUser {
 export interface IEvent {
   author: string;
   guest: string;
-  data: string;
+  date: string;
   description: string;
 }
